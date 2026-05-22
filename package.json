@@ -61,6 +61,37 @@
             "path": "cz-conventional-changelog"
         }
     },
+    "release-it": {
+        "git": {
+            "commitMessage": "chore(release): v${version}",
+            "tagName": "v${version}",
+            "requireCleanWorkingDir": true,
+            "requireUpstream": true,
+            "requireBranch": "main"
+        },
+        "npm": {
+            "publish": true
+        },
+        "github": {
+            "release": false
+        },
+        "plugins": {
+            "@release-it/conventional-changelog": {
+                "infile": "CHANGELOG.md",
+                "header": "# Changelog",
+                "preset": {
+                    "name": "conventionalcommits"
+                }
+            }
+        },
+        "hooks": {
+            "before:init": [
+                "npm run lint",
+                "npm run typecheck",
+                "npm test"
+            ]
+        }
+    },
     "lint-staged": {
         "*.{ts,js,cjs,mjs,md}": [
             "prettier --write"
