@@ -1,0 +1,17 @@
+Project: toplayer
+
+Summary:
+- Framework-agnostic TypeScript library for tracking browser top-layer state.
+- Intended to expose top-layer inspection and subscription primitives.
+- Current repository state focuses on package infrastructure, build tooling, and test scaffolding.
+
+Guidance:
+- Prefer `README.md` for package-level positioning and setup commands.
+- Treat `src/index.ts` as the source of truth for the public export surface.
+- Keep the core package framework-agnostic and browser-focused.
+- Avoid introducing framework-specific hooks or adapters into the root package unless explicitly requested.
+
+Key Docs:
+- README: `README.md`
+- Public exports: `src/index.ts`
+- Project guidance: `AGENTS.md`
