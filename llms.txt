@@ -1,4 +1,4 @@
-Project: toplayer
+Project: dom-top-layer
 
 Summary:
 - Framework-agnostic TypeScript library for tracking browser top-layer state.

@@ -1,8 +1,8 @@
 import { describe, expect, it } from "vitest";
-import * as toplayer from "./index";
+import * as domTopLayer from "./index";
 
-describe("toplayer package", () => {
+describe("dom-top-layer package", () => {
     it("exposes a valid module entrypoint", () => {
-        expect(Object.keys(toplayer)).toEqual([]);
+        expect(Object.keys(domTopLayer)).toEqual([]);
     });
 });

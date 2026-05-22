@@ -1,6 +1,6 @@
-# toplayer
+# dom-top-layer
 
-`toplayer` is a framework-agnostic TypeScript library for tracking which elements are currently active in the browser's top layer and for reacting to changes over time.
+`dom-top-layer` is a framework-agnostic TypeScript library for tracking which elements are currently active in the browser's top layer and for reacting to changes over time.
 
 The package is being set up to support two core goals:
 
@@ -15,12 +15,12 @@ This repository currently contains the package infrastructure and a minimal publ
 
 Modern browsers expose several features that participate in the top layer, such as dialogs, popovers, and fullscreen elements. What browsers do not currently provide is a first-class, framework-agnostic way to inspect the active top-layer stack or subscribe to changes in that stack.
 
-`toplayer` is intended to fill that gap with a small, focused browser utility that can later power framework adapters, hooks, or application-specific integrations without making those choices part of the core package.
+`dom-top-layer` is intended to fill that gap with a small, focused browser utility that can later power framework adapters, hooks, or application-specific integrations without making those choices part of the core package.
 
 ## Installation
 
 ```bash
-npm install toplayer
+npm install dom-top-layer
 ```
 
 ## Development

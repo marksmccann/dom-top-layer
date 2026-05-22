@@ -2,7 +2,7 @@
 
 ## Project Overview
 
-- `toplayer` is a framework-agnostic TypeScript library for tracking browser top-layer state.
+- `dom-top-layer` is a framework-agnostic TypeScript library for tracking browser top-layer state.
 - Source code lives in `src/`.
 - Public exports are collected in `src/index.ts`.
 - Build output is generated into `dist/` and should not be edited manually.

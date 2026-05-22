@@ -1,5 +1,5 @@
 {
-    "name": "toplayer",
+    "name": "dom-top-layer",
     "version": "0.1.0",
     "description": "A framework-agnostic TypeScript library for tracking browser top-layer state and subscribing to top-layer changes.",
     "keywords": [
@@ -11,13 +11,13 @@
         "fullscreen",
         "typescript"
     ],
-    "homepage": "https://github.com/marksmccann/toplayer#readme",
+    "homepage": "https://github.com/marksmccann/dom-top-layer#readme",
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/marksmccann/toplayer.git"
+        "url": "git+https://github.com/marksmccann/dom-top-layer.git"
     },
     "bugs": {
-        "url": "https://github.com/marksmccann/toplayer/issues"
+        "url": "https://github.com/marksmccann/dom-top-layer/issues"
     },
     "license": "MIT",
     "author": "Mark McCann",
