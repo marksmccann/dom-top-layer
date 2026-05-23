@@ -4,3 +4,4 @@ coverage
 .npm-cache
 .DS_Store
 .husky/_
+TODO.md
