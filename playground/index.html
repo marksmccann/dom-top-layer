@@ -1,0 +1,489 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>dom-top-layer playground</title>
+        <style>
+            :root {
+                color-scheme: light;
+                font-family:
+                    "Iowan Old Style", "Palatino Linotype", "Book Antiqua",
+                    Palatino, Georgia, serif;
+                line-height: 1.5;
+                --ink: #1d2433;
+                --paper: rgba(255, 255, 255, 0.74);
+                --border: rgba(29, 36, 51, 0.14);
+                --accent: #1d2433;
+                --accent-alt: #6f4e37;
+                --console: #111827;
+                --console-ink: #f9fafb;
+            }
+
+            * {
+                box-sizing: border-box;
+            }
+
+            body {
+                margin: 0;
+                min-height: 100vh;
+                background:
+                    radial-gradient(circle at top, #f8f0db 0%, #f4eee3 30%, #e8ecf2 100%);
+                color: var(--ink);
+            }
+
+            main {
+                max-width: 72rem;
+                margin: 0 auto;
+                padding: 3rem 1.5rem 4rem;
+            }
+
+            .stack {
+                display: grid;
+                gap: 1.5rem;
+            }
+
+            .panel {
+                padding: 1.5rem;
+                border: 1px solid var(--border);
+                border-radius: 1.25rem;
+                background: var(--paper);
+                backdrop-filter: blur(18px);
+                box-shadow: 0 18px 40px rgba(29, 36, 51, 0.08);
+            }
+
+            .grid {
+                display: grid;
+                gap: 1.5rem;
+            }
+
+            @media (min-width: 900px) {
+                .grid {
+                    grid-template-columns: 1.15fr 0.85fr;
+                }
+            }
+
+            h1,
+            h2,
+            h3 {
+                margin-top: 0;
+            }
+
+            p:last-child {
+                margin-bottom: 0;
+            }
+
+            .examples {
+                display: grid;
+                gap: 1rem;
+                margin-top: 1.5rem;
+            }
+
+            .example-card {
+                padding: 1rem;
+                border: 1px solid var(--border);
+                border-radius: 1rem;
+                background: rgba(255, 255, 255, 0.55);
+            }
+
+            .actions {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 0.75rem;
+                margin-top: 1rem;
+            }
+
+            button {
+                border: 0;
+                border-radius: 999px;
+                padding: 0.8rem 1.1rem;
+                background: var(--accent);
+                color: #fdfaf4;
+                font: inherit;
+                cursor: pointer;
+            }
+
+            button.secondary {
+                background: var(--accent-alt);
+            }
+
+            button.ghost {
+                background: transparent;
+                color: var(--ink);
+                border: 1px solid var(--border);
+            }
+
+            .state-list,
+            .notes-list {
+                margin: 1rem 0 0;
+                padding-left: 1.25rem;
+            }
+
+            .state-list li + li,
+            .notes-list li + li {
+                margin-top: 0.4rem;
+            }
+
+            .badge {
+                display: inline-block;
+                padding: 0.2rem 0.55rem;
+                border-radius: 999px;
+                background: rgba(111, 78, 55, 0.12);
+                color: #6f4e37;
+                font-size: 0.92rem;
+            }
+
+            code,
+            pre {
+                font-family:
+                    "SFMono-Regular", Consolas, "Liberation Mono", Menlo,
+                    monospace;
+            }
+
+            pre {
+                overflow: auto;
+                margin: 0;
+                padding: 1rem;
+                border-radius: 1rem;
+                background: var(--console);
+                color: var(--console-ink);
+                min-height: 14rem;
+                max-height: 24rem;
+            }
+
+            dialog {
+                border: 0;
+                border-radius: 1rem;
+                padding: 1.25rem;
+                width: min(28rem, calc(100vw - 3rem));
+                box-shadow: 0 30px 80px rgba(17, 24, 39, 0.28);
+            }
+
+            dialog::backdrop {
+                background: rgba(17, 24, 39, 0.45);
+            }
+
+            .dialog-actions {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 0.75rem;
+                margin-top: 1rem;
+            }
+
+            .anchor-row {
+                display: flex;
+                gap: 0.75rem;
+                align-items: center;
+                flex-wrap: wrap;
+                margin-top: 1rem;
+            }
+
+            [popover] {
+                max-width: min(22rem, calc(100vw - 3rem));
+            }
+
+            #nested-popover {
+                inset: auto auto auto auto;
+                margin: 0;
+            }
+        </style>
+    </head>
+    <body>
+        <main>
+            <div class="stack">
+                <section class="panel">
+                    <span class="badge">Browser playground</span>
+                    <h1>dom-top-layer playground</h1>
+                    <p>
+                        This page imports <code>../dist/index.js</code> and
+                        exercises the package with progressively more complex
+                        top-layer interactions, including nested flows.
+                    </p>
+
+                    <div class="examples">
+                        <section class="example-card">
+                            <h2>Example 1: Single modal dialog</h2>
+                            <p>Start with the simplest case and inspect the emitted enter and exit events.</p>
+                            <div class="actions">
+                                <button id="open-dialog">Open modal dialog</button>
+                            </div>
+                        </section>
+
+                        <section class="example-card">
+                            <h2>Example 2: Dialog plus popover</h2>
+                            <p>Open a dialog, then toggle a popover from within it to watch the stack grow.</p>
+                            <div class="actions">
+                                <button id="open-nested-dialog" class="secondary">
+                                    Open layered example
+                                </button>
+                            </div>
+                        </section>
+
+                        <section class="example-card">
+                            <h2>Example 3: Nested top-layer sequence</h2>
+                            <p>
+                                From the layered dialog, open a nested popover
+                                and then a confirmation dialog above everything
+                                else.
+                            </p>
+                            <ul class="notes-list">
+                                <li>Expected order: layered dialog, nested popover, confirmation dialog.</li>
+                                <li>Close them in reverse order to watch the stack unwind.</li>
+                            </ul>
+                        </section>
+
+                        <section class="example-card">
+                            <h2>Example 4: Inject an open dialog</h2>
+                            <p>
+                                Open a host modal, then inject a new
+                                <code>&lt;dialog open&gt;</code> into the page
+                                while that modal is still active.
+                            </p>
+                            <ul class="notes-list">
+                                <li>This is useful for checking how DOM insertion interacts with top-layer tracking.</li>
+                                <li>Expected behavior: the injected dialog is tracked immediately, but while the host modal is open it may sit behind that modal's backdrop.</li>
+                                <li>Close the host modal after injection to reveal the injected dialog visually.</li>
+                            </ul>
+                            <div class="actions">
+                                <button id="open-injection-host" class="secondary">
+                                    Open injection example
+                                </button>
+                            </div>
+                        </section>
+                    </div>
+                </section>
+
+                <section class="grid">
+                    <section class="panel">
+                        <h2>Active stack</h2>
+                        <p>The controller writes indices into the DOM and reports the current ordered top-layer elements here.</p>
+                        <ul id="state" class="state-list"></ul>
+                    </section>
+
+                    <section class="panel">
+                        <h2>Recent events</h2>
+                        <pre id="events">Waiting for top-layer activity...</pre>
+                    </section>
+                </section>
+            </div>
+        </main>
+
+        <dialog id="demo-dialog">
+            <h2>Simple dialog</h2>
+            <p>This is the single-element baseline example.</p>
+            <form method="dialog">
+                <button>Close dialog</button>
+            </form>
+        </dialog>
+
+        <dialog id="layered-dialog">
+            <h2>Layered dialog</h2>
+            <p>
+                This dialog is the base for the nested example. Open the
+                popover first, then launch the confirmation dialog on top.
+            </p>
+
+            <div class="anchor-row">
+                <button id="toggle-nested-popover" type="button" class="secondary" popovertarget="nested-popover">
+                    Toggle nested popover
+                </button>
+                <button id="open-confirmation-dialog" type="button">
+                    Open confirmation dialog
+                </button>
+            </div>
+
+            <div class="dialog-actions">
+                <form method="dialog">
+                    <button class="ghost">Close layered dialog</button>
+                </form>
+            </div>
+
+            <div id="nested-popover" popover="auto" class="panel">
+                <h3>Nested popover</h3>
+                <p>This popover sits above the layered dialog while it remains open.</p>
+                <button type="button" class="ghost" popovertarget="nested-popover" popovertargetaction="hide">
+                    Hide popover
+                </button>
+            </div>
+        </dialog>
+
+        <dialog id="confirmation-dialog">
+            <h2>Confirmation dialog</h2>
+            <p>This is the top-most element in the nested sequence.</p>
+            <form method="dialog">
+                <button>Close confirmation dialog</button>
+            </form>
+        </dialog>
+
+        <dialog id="injection-host-dialog">
+            <h2>Injection host dialog</h2>
+            <p>
+                Use these controls while this modal stays open to inject or
+                remove another dialog element from the page.
+            </p>
+            <p id="injection-status">
+                No injected dialog yet. When one is injected, it is appended to
+                <code>document.body</code> with the <code>open</code> attribute
+                already set.
+            </p>
+
+            <div class="dialog-actions">
+                <button id="inject-open-dialog" type="button" class="secondary">
+                    Inject <code>&lt;dialog open&gt;</code>
+                </button>
+                <button id="remove-injected-dialog" type="button" class="ghost">
+                    Remove injected dialog
+                </button>
+            </div>
+
+            <form method="dialog" class="dialog-actions">
+                <button class="ghost">Close host modal</button>
+            </form>
+        </dialog>
+
+        <script type="module">
+            import { TopLayerController } from "../dist/index.js";
+
+            const controller = new TopLayerController();
+            const eventsOutput = document.querySelector("#events");
+            const stateList = document.querySelector("#state");
+            const simpleDialog = document.querySelector("#demo-dialog");
+            const layeredDialog = document.querySelector("#layered-dialog");
+            const confirmationDialog = document.querySelector("#confirmation-dialog");
+            const injectionHostDialog = document.querySelector("#injection-host-dialog");
+            const openDialogButton = document.querySelector("#open-dialog");
+            const openNestedDialogButton = document.querySelector("#open-nested-dialog");
+            const openConfirmationDialogButton = document.querySelector("#open-confirmation-dialog");
+            const openInjectionHostButton = document.querySelector("#open-injection-host");
+            const injectOpenDialogButton = document.querySelector("#inject-open-dialog");
+            const removeInjectedDialogButton = document.querySelector("#remove-injected-dialog");
+            const injectionStatus = document.querySelector("#injection-status");
+            let injectedDialog = null;
+
+            const renderInjectionStatus = () => {
+                if (injectedDialog === null) {
+                    injectionStatus.innerHTML = `
+                        No injected dialog yet. When one is injected, it is appended to
+                        <code>document.body</code> with the <code>open</code> attribute
+                        already set.
+                    `;
+                    return;
+                }
+
+                injectionStatus.innerHTML = `
+                    Injected <code>#${injectedDialog.id}</code> into
+                    <code>document.body</code> with <code>open</code> already set.
+                `;
+            };
+
+            const describeElement = (element) => {
+                const id = element.id ? `#${element.id}` : element.tagName.toLowerCase();
+                const index = element.getAttribute("data-top-layer-index");
+                return {
+                    id,
+                    tagName: element.tagName.toLowerCase(),
+                    index: index === null ? null : Number(index)
+                };
+            };
+
+            const renderElements = (elements) => {
+                if (elements.length === 0) {
+                    const item = document.createElement("li");
+                    item.textContent = "No active top-layer elements";
+                    stateList.replaceChildren(item);
+                    return;
+                }
+
+                stateList.replaceChildren(
+                    ...elements.map((element, index) => {
+                        const item = document.createElement("li");
+                        const name = element.id ? `#${element.id}` : element.tagName.toLowerCase();
+                        const managedIndex = element.getAttribute("data-top-layer-index");
+                        item.textContent = `${index}: ${name} (data-top-layer-index="${managedIndex}")`;
+                        return item;
+                    })
+                );
+            };
+
+            const eventLog = [];
+
+            controller.subscribe((event) => {
+                eventLog.unshift({
+                    type: event.type,
+                    target: describeElement(event.target),
+                    index: event.type === "enter" ? event.index : null,
+                    elements: event.elements.map(describeElement)
+                });
+
+                eventLog.splice(8);
+                eventsOutput.textContent = JSON.stringify(eventLog, null, 4);
+                renderElements(event.elements);
+                console.log("top-layer event", event);
+            });
+
+            controller.connect(document);
+            renderElements(controller.getElements());
+            renderInjectionStatus();
+
+            openDialogButton.addEventListener("click", () => {
+                simpleDialog.showModal();
+            });
+
+            openNestedDialogButton.addEventListener("click", () => {
+                layeredDialog.showModal();
+            });
+
+            openConfirmationDialogButton.addEventListener("click", () => {
+                confirmationDialog.showModal();
+            });
+
+            openInjectionHostButton.addEventListener("click", () => {
+                injectionHostDialog.showModal();
+            });
+
+            injectOpenDialogButton.addEventListener("click", () => {
+                injectedDialog?.remove();
+
+                const dialog = document.createElement("dialog");
+                dialog.id = "injected-open-dialog";
+                dialog.className = "panel";
+                dialog.setAttribute("open", "");
+                dialog.innerHTML = `
+                    <h2>Injected open dialog</h2>
+                    <p>
+                        This dialog was appended to the page with the
+                        <code>open</code> attribute already set while another
+                        modal dialog was open.
+                    </p>
+                    <form method="dialog">
+                        <button class="ghost">Close injected dialog</button>
+                    </form>
+                `;
+
+                dialog.addEventListener("close", () => {
+                    dialog.removeAttribute("open");
+                    dialog.remove();
+
+                    if (injectedDialog === dialog) {
+                        injectedDialog = null;
+                        renderInjectionStatus();
+                    }
+                });
+
+                document.body.append(dialog);
+                injectedDialog = dialog;
+                renderInjectionStatus();
+            });
+
+            removeInjectedDialogButton.addEventListener("click", () => {
+                injectedDialog?.remove();
+                injectedDialog = null;
+                renderInjectionStatus();
+            });
+
+            injectionHostDialog.addEventListener("close", () => {
+                renderInjectionStatus();
+            });
+        </script>
+    </body>
+</html>
