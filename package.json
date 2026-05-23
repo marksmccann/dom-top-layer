@@ -1,6 +1,6 @@
 {
     "name": "dom-top-layer",
-    "version": "0.1.0",
+    "version": "0.2.0",
     "description": "A framework-agnostic TypeScript library for tracking browser top-layer state and subscribing to top-layer changes.",
     "keywords": [
         "top-layer",
